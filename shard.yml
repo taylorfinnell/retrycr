@@ -1,0 +1,13 @@
+name: retrycr
+version: 0.1.0
+
+authors:
+  - Taylor Finnell <tmfinnell@gmail.com>
+
+crystal: 0.24.1
+
+license: MIT
+
+development_dependencies:
+  ameba:
+    github: veelenga/ameba
