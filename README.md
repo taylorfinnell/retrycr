@@ -19,7 +19,7 @@ dependencies:
 require "retrycr"
 ```
 
-Retry all exceptions
+Retry all exceptions.
 
 ```crystal
 retryable(tries: 1, wait: 1) do
@@ -27,28 +27,28 @@ retryable(tries: 1, wait: 1) do
 end
 ```
 
-You may specify which `Exception` classes to retry on
+You may specify which `Exception` classes trigger a retry.
 ```crystal
-retryable(on: ArgumentError, tries: 1, wait: 1) do
+retryable(on: ArgumentError | Base64::Error, tries: 1, wait: 1) do
   # my code
 end
 ```
 
-The *wait* parameter can either be an `Int32` or a `Proc`
+The *wait* parameter can either be an `Int32` or a `Proc`.
 ```crystal
 retryable(tries: 1, wait: ->(x : Int32) { 2**x }) do
   # my code
 end
 ```
 
-The number of retries that have happened is yielded to the block
+The number of retries that have happened is yielded to the block.
 ```crystal
 retryable(tries: 1, wait: 1) do |retries|
   puts "There have been #{retries} retries!"
 end
 ```
 
-You can specify a callback to run everytime the code is retries
+You can specify a callback to run everytime the code is retried.
 ```crystal
 callback = -> (ex : Exeption) { "The code is about to be retried!" }
 retryable(tries: 1, wait: 1, callback: callback) do |retries|
@@ -56,7 +56,7 @@ retryable(tries: 1, wait: 1, callback: callback) do |retries|
 end
 ```
 
-You can specify a callback to run after all retries are exhausted
+You can specify a callback to run after all retries are exhausted.
 ```crystal
 f = File.open("test")
 callback = -> (retries : Int32) { f.close }
