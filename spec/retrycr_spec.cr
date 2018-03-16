@@ -46,9 +46,35 @@ describe Retrycr do
     cb_called.should eq(3)
   end
 
+  it "finally yields ex" do
+    proc = ->(tries : Int32, ex : Exception) do
+      ex.should be_a(Exception)
+      1
+    end
+
+    assert_retried do
+      retryable(tries: 3, wait: 0, finally: proc) do |retries|
+        raise Exception.new
+      end
+    end
+  end
+
+  it "finally is only called once" do
+    finally = 0
+    proc = ->(tries : Int32, ex : Exception) { finally = finally + 1 }
+
+    assert_retried do
+      retryable(tries: 3, wait: 0, finally: proc) do |retries|
+        raise Exception.new
+      end
+    end
+
+    finally.should eq(1)
+  end
+
   it "can have a callback for final operation" do
     finally = 0
-    proc = ->(tries : Int32) { finally = tries }
+    proc = ->(tries : Int32, ex : Exception) { finally = tries }
 
     assert_retried do
       retryable(tries: 3, wait: 0, finally: proc) do |retries|
